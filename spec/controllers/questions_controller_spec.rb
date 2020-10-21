@@ -116,8 +116,8 @@ RSpec.describe QuestionsController, type: :controller do
       it 'does not change question' do
         question.reload
 
-        expect(question.title).to eq 'super or super()?'
-        expect(question.body).to eq 'What is the difference between calling super and calling super()?'
+        expect(question.title).to eq 'Simple question'
+        expect(question.body).to eq 'Body of the question'
       end
 
       it 're-renders edit view' do
