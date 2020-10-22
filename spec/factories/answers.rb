@@ -1,10 +1,18 @@
 FactoryBot.define do
+  sequence :body do |n|
+    "Body of the answer #{n}"
+  end
+
   factory :answer do
-    body { 'Super() invokes the parent method without any arguments, as presumably expected.' }
+    body { 'Test answer' }
     question
 
     trait :invalid do
       body { nil }
+    end
+
+    trait :for_list do
+      body
     end
   end
 end

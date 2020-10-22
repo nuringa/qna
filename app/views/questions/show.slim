@@ -4,9 +4,9 @@ p = @question.body
 h3 'Answers'
 
 - if @question.answers.empty?
-  p 'No questions to show.'
+  p 'No answers to show.'
 - else
-  = render @question.answers
+  = render @question.answers, answers: @question.answers
 
 h3 Answer a question
 

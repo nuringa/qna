@@ -12,7 +12,7 @@ feature 'User can see list of questions', "
     scenario 'sees a list of questions' do
       visit questions_path
       expect(page).to have_content 'Questions'
-      questions.each do |_question, index|
+      questions.each.with_index(1) do |_question, index|
         expect(page).to have_content "Question #{index}"
       end
     end
