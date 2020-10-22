@@ -1,2 +1,13 @@
 h1 = @question.title
 p = @question.body
+
+h3 'Answers'
+
+- if @question.answers.empty?
+  p 'No questions to show.'
+- else
+  = render @question.answers
+
+h3 Answer a question
+
+= render 'answers/form', answer: @question.answers.new

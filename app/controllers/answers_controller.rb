@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
 
   before_action :load_question, only: %i[new create]
 
@@ -10,9 +11,9 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
 
     if @answer.save
-      redirect_to @question
+      redirect_to @answer.question, notice: 'Your answer successfully created.'
     else
-      render :new
+      redirect_to @answer.question, notice: @answer.errors.full_messages.join(' ')
     end
   end
 

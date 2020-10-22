@@ -6,14 +6,22 @@ feature 'User can see list of questions', "
   I'd like to be able to see the list of questions
 " do
 
-  given!(:questions) { create_list( :question, 3, :for_list) }
+  describe 'With one or more questions already in data base' do
+    given!(:questions) { create_list( :question, 3, :for_list) }
 
-  scenario 'sees a list of questions' do
-    visit questions_path
+    scenario 'sees a list of questions' do
+      visit questions_path
+      expect(page).to have_content 'Questions'
+      questions.each do |_question, index|
+        expect(page).to have_content "Question #{index}"
+      end
+    end
+  end
 
-    expect(page).to have_content 'Questions'
-    questions.each do |_question, index|
-      expect(page).to have_content "Question #{index}"
+  describe 'With no questions in data base' do
+    scenario 'sees a message if there are no questions asked yet' do
+      visit questions_path
+      expect(page).to have_content 'No questions to show.'
     end
   end
 end
