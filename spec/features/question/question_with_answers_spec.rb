@@ -1,14 +1,20 @@
 require 'rails_helper'
 
-feature 'Visitor can see a list of answers to a question', %q{
+feature 'Visitor can see a question and a list of answers to a question', %q{
   In order to find out all available answers to the question
   As an unauthenticated user
-  I'd like to see the answers on the question page
+  I'd like to see the question and its answers on the same page
 } do
 
   given!(:question) { create( :question) }
 
-  describe 'With existing list of answers' do
+  scenario 'Visitor can see a question' do
+    visit question_path(question)
+    expect(page).to have_content 'Simple question'
+    expect(page).to have_content 'Body of the question'
+  end
+
+  describe 'With existing list of answers visitor' do
     given!(:answers) { create_list(:answer, 3, :for_list, question: question) }
 
     before { visit question_path(question) }
@@ -21,7 +27,7 @@ feature 'Visitor can see a list of answers to a question', %q{
     end
   end
 
-  describe 'With no answers to the question' do
+  describe 'With no answers to the question visitor' do
     scenario 'sees a message that there are no answers given yet' do
       visit question_path(question)
       expect(page).to have_content 'No answers to show.'
