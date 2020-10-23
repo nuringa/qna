@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question) }
-  let(:answer) { create(:answer) }
+  let!(:answer) { create(:answer) }
+  let(:another_user) { create(:user) }
 
   describe 'GET #new' do
     before { login(user) }
@@ -49,6 +50,38 @@ RSpec.describe AnswersController, type: :controller do
       it 're-renders answer new view ' do
         post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
         expect(response).to redirect_to question
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    before { login(user) }
+
+    context 'Authenticated user, the author of the answer' do
+
+      let!(:answer) { create(:answer, author: user, question: question) }
+
+      it 'deletes the answer ' do
+        expect { delete :destroy, params: { use_route: 'questions/answers/', id: answer.id } }.to change(Answer, :count).by(-1)
+      end
+
+      it 'gets question show page after deleting' do
+        delete :destroy, params: { use_route: 'questions/answers/', id: answer.id }
+        expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+
+    context 'Authenticated user, not author of the answer' do
+      before { login(another_user) }
+
+      it 'can not delete the answer' do
+        expect { delete :destroy, params: { use_route: 'questions/answers/', id: answer.id } }.to_not change(Question, :count)
+      end
+
+      it 'gets question show page after not deleting' do
+        delete :destroy, params: { use_route: 'questions/answers/', id: answer.id }
+
+        expect(response).to render_template 'questions/show'
       end
     end
   end
