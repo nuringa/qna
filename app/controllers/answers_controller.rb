@@ -15,7 +15,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @answer.question, notice: 'Your answer successfully created.'
     else
-      redirect_to @answer.question, notice: @answer.errors.full_messages.join(' ')
+      render 'questions/show'
     end
   end
 
