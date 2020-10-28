@@ -1,7 +1,9 @@
-- if user_signed_in?
-  ul
-    li = link_to 'Sign out', destroy_user_session_path, method: :delete
-- else
-  ul
-    li = link_to 'Login', new_user_session_path
-    li = link_to 'Signup', new_user_registration_path
+.mt-3.mb-3
+  ul.nav.navbar-expand-lg.navbar-light.bg-light
+    .navbar-nav.ml-3
+      li.navbar-brand = link_to 'Home', root_path, class: 'btn btn-secondary mr-5'
+      - if user_signed_in?
+        li.nav-item = link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link'
+      - else
+        li.nav-item = link_to 'Login', new_user_session_path, class: 'nav-link'
+        li.nav-item = link_to 'Signup', new_user_registration_path, class: 'nav-link'

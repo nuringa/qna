@@ -13,7 +13,7 @@ feature 'Authenticated user can create question', %q{
       sign_in(user)
 
       visit questions_path
-      click_on 'Ask'
+      click_on 'Ask question'
     end
 
     scenario 'asks a question' do

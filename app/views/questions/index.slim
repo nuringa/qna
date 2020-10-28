@@ -1,11 +1,17 @@
-h1.title Questions
+.ml-3
+  h1.title.text-primary.text-center Questions
 
-- if @questions.empty?
-  p 'No questions to show.'
-- else
-  ul
-    - @questions.each do |question|
-      li =  question.title
+  .container
+    .row.mt-5
+      .col-auto
+        table.table.table-hover
+          thead
+            tr
+            - if @questions.empty?
+              th 'No questions to show.'
+            - else
+              th Title
+              th Author
+          = render @questions
 
-p = link_to 'Ask  question', new_question_path, class: 'btn btn-primary'
-
+        = link_to 'Ask  question', new_question_path, class: 'btn btn-primary'

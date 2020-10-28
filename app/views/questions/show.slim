@@ -1,16 +1,22 @@
-h1 = @question.title
-p = @question.body
+.ml-3
+  .container
+    .row.mt-5
+      .col-auto
+        h1.title.text-primary.text-center = @question.title
 
-- if current_user&.author_of?(@question)
-  p = link_to 'Delete question', question_path(@question), method: :delete
+        h3 = @question.body
 
-h3 'Answers'
+        - if current_user&.author_of?(@question)
+          p = link_to 'Delete question', question_path(@question), method: :delete
 
-- if @question.answers.empty?
-  p 'No answers to show.'
-- else
-  = render @question.answers, answers: @question.answers
+        h2.title.text-secondary.mt-5 Answers
 
-h3 Answer a question
+        - if @question.answers.empty?
+          p No answers to show.
+        - else
+          = render @question.answers, answers: @question.answers
 
-= render 'answers/form', answer: @question.answers.new
+
+        h3.mt-5 Answer a question
+
+        = render 'answers/form', answer: @question.answers.new
