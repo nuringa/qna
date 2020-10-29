@@ -1,12 +1,8 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
-  before_action :load_question, only: %i[new create]
+  before_action :load_question, only: %i[create]
   before_action :load_answer, only: %i[destroy]
-
-  def new
-    @answer = @question.answers.new
-  end
 
   def create
     @answer = @question.answers.new(answer_params)

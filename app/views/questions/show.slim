@@ -9,14 +9,15 @@
         - if current_user&.author_of?(@question)
           p = link_to 'Delete question', question_path(@question), method: :delete
 
-        h2.title.text-secondary.mt-5 Answers
+        .answers
+          h2.title.text-secondary.mt-5 Answers
 
-        - if @question.answers.empty?
-          p No answers to show.
-        - else
-          = render @question.answers, answers: @question.answers
+          - if @question.answers.empty?
+            p No answers to show.
+          - else
+            = render @question.answers, answers: @question.answers
 
 
         h3.mt-5 Answer a question
 
-        = render 'answers/form', answer: @question.answers.new
+        = render 'answers/form', answer: @answer

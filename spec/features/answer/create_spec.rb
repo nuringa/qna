@@ -21,7 +21,9 @@ feature 'Authenticated user can answer a question', %q{
       click_on 'Answer'
 
       expect(page).to have_content 'Your answer successfully created.'
-      expect(page).to have_content 'Test answer to the question'
+      within '.answers' do
+        expect(page).to have_content 'Test answer to the question'
+      end
     end
 
     scenario 'answers a a question with errors' do
