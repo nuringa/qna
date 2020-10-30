@@ -15,15 +15,14 @@ feature 'User can answer a question', %q{
       visit question_path(question)
     end
 
-    scenario 'answers a question' do
+    scenario 'answers a question', js: true do
       fill_in 'Body', with: 'My answer'
       click_on 'Answer'
 
-      expect(page).to have_content 'Your answer successfully created.'
       expect(page).to have_content 'My answer'
     end
 
-    scenario 'gives answer with invalid params' do
+    scenario 'gives answer with invalid params', js: true do
       click_on 'Answer'
       expect(page).to have_content "Body can't be blank"
     end
