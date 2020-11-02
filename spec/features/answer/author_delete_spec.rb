@@ -10,7 +10,7 @@ feature 'Author can delete his answer', "
   given(:other_user) { create(:user) }
   given(:answer) { create(:answer, author: user) }
 
-  describe 'An author of the answer' do
+  describe 'An author of the answer', js: true do
     background do
       sign_in(user)
       visit question_path(answer.question)
@@ -18,7 +18,7 @@ feature 'Author can delete his answer', "
 
     scenario 'deletes it' do
       expect(page).to have_content 'Test answer'
-      click_on 'Delete answer'
+      click_on 'Delete'
       expect(page).to have_content 'Your answer was deleted.'
       expect(page).to_not have_content 'Test answer'
     end

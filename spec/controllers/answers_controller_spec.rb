@@ -37,30 +37,43 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     let!(:answer) { create(:answer, question: question, author: question.author) }
 
+    subject { patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js } }
+
     before { login(user) }
 
     context 'with valid attributes' do
       it 'changes answer attributes' do
-        patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js }
+        subject
         answer.reload
         expect(answer.body).to eq 'new body'
       end
 
-      it 'renders update view' do
-        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+      it 'renders update view after save' do
+        subject
         expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
-        expect do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
-        end.to_not change(answer, :body)
+        expect { subject }.to_not change(answer, :body)
+      end
+
+      it 'renders update view after saving attempt' do
+        subject
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'not author of the answer tries to update it' do
+      before { login(another_user) }
+
+      it 'does not change answer attributes' do
+        expect { subject }.to_not change(answer, :body)
       end
 
       it 'renders update view' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        subject
         expect(response).to render_template :update
       end
     end
@@ -72,28 +85,34 @@ RSpec.describe AnswersController, type: :controller do
     context 'Authenticated user, the author of the answer' do
 
       let!(:answer) { create(:answer, author: user, question: question) }
+      subject { delete :destroy, params: { id: answer }, format: :js }
 
-      it 'deletes the answer ' do
-        expect { delete :destroy, params: { use_route: 'questions/answers/', id: answer.id } }.to change(Answer, :count).by(-1)
+      it 'deletes the answer' do
+        expect { subject }.to change(Answer, :count).by(-1)
       end
 
-      it 'gets question show page after deleting' do
-        delete :destroy, params: { use_route: 'questions/answers/', id: answer.id }
-        expect(response).to redirect_to question_path(answer.question)
+      it 'creates a destroy flash message' do
+        subject
+        expect(flash[:danger]).to include('Your answer was deleted.')
+      end
+
+      it 'renders destroy view after deleting', js: true do
+        subject
+        expect(response).to render_template :destroy
       end
     end
 
     context 'Authenticated user, not author of the answer' do
       before { login(another_user) }
+      subject { delete :destroy, params: { id: answer }, format: :js }
 
       it 'can not delete the answer' do
-        expect { delete :destroy, params: { use_route: 'questions/answers/', id: answer.id } }.to_not change(Question, :count)
+        expect { subject }.to_not change(Question, :count)
       end
 
-      it 'gets question show page after not deleting' do
-        delete :destroy, params: { use_route: 'questions/answers/', id: answer.id }
-
-        expect(response).to render_template 'questions/show'
+      it 'returns forbidden status response' do
+        subject
+        expect(flash[:danger]).to include('Action not allowed')
       end
     end
   end

@@ -18,10 +18,10 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      redirect_to question_path(@answer.question), notice: 'Your answer was deleted.'
+      flash[:danger] = 'Your answer was deleted.'
+      render :destroy
     else
-      flash[:notice] = 'Action not allowed'
-      render 'questions/show'
+      flash[:danger] = 'Action not allowed'
     end
   end
 

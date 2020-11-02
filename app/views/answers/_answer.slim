@@ -1,17 +1,14 @@
-- if @question.answers.any?
-  p = answer.body
+div id="answer-#{answer.id}"
 
-  - if user_signed_in?
-    p = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+  div = answer.body
+
+  - if current_user&.author_of?(answer)
+    .list-group.list-group-horizontal.mt-3
+      = link_to 'Edit', '#', class: 'edit-answer-link list-group-item', data: { answer_id: answer.id }
+      = link_to 'Delete', answer_path(answer), class: 'delete-answer-link list-group-item', remote: true, method: :delete
 
     = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
       .form-group
         = f.label :body, class: 'mr-3'
         = f.text_area :body
       = f.submit 'Save', class: 'btn btn-primary'
-
-  - if answer.persisted? && current_user&.author_of?(answer)
-    p = link_to 'Delete answer', answer_path(answer), method: :delete
-
-- else
-  p 'No answers to show.'

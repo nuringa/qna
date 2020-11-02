@@ -1,0 +1,5 @@
+$("#flash").html('<%= j render partial: 'shared/flash' %>');
+
+<% unless @answer.persisted? %>
+  $('#answer-<%= @answer.id %>').fadeOut();
+<% end %>
