@@ -17,11 +17,4 @@ feature 'User can see list of questions', "
       end
     end
   end
-
-  describe 'With no questions in data base' do
-    scenario 'sees a message if there are no questions asked yet' do
-      visit questions_path
-      expect(page).to have_content 'No questions to show.'
-    end
-  end
 end

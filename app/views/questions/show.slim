@@ -24,11 +24,7 @@
         .answers
           h2.title.text-secondary.mt-5 Answers
 
-          - if @question.answers.empty?
-            p No answers to show.
-          - else
-            = render @question.answers
-
+          = render @question.answers
 
         h3.mt-5 Answer a question
 
