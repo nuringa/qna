@@ -2,7 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: %i[show]
 
   before_action :load_question, only: %i[create]
-  before_action :load_answer, only: %i[update destroy]
+  before_action :load_answer, only: %i[update destroy best]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -11,15 +11,27 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer.update(answer_params)
-    @question = @answer.question
+    if current_user.author_of?(@answer)
+      @answer.update(answer_params)
+      @question = @answer.question
+    else
+      flash[:danger] = 'Action not allowed'
+    end
   end
 
   def destroy
-    if current_user.author_of?(@answer)
+    if current_user&.author_of?(@answer)
       @answer.destroy
       flash[:danger] = 'Your answer was deleted.'
       render :destroy
+    else
+      flash[:danger] = 'Action not allowed'
+    end
+  end
+
+  def best
+    if current_user&.author_of?(@answer.question)
+      @answer.select_best!
     else
       flash[:danger] = 'Action not allowed'
     end

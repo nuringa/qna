@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
-  let(:question) { create(:question) }
+  let(:question) { create(:question, author: user) }
+  let!(:answer) { create(:answer, question: question, author: user) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -38,10 +39,8 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     before { login(user) }
 
-    let!(:answer) { create(:answer, question: question, author: question.author) }
-
     context 'with valid attributes' do
-      let(:valid_params) { { id: answer, answer: { body: 'new body' }, format: :js } }
+      let(:valid_params) { { id: answer.id, answer: { body: 'new body' }, format: :js } }
 
       it 'changes answer attributes' do
         patch :update, params: valid_params
@@ -81,13 +80,17 @@ RSpec.describe AnswersController, type: :controller do
         patch :update, params: valid_params
         expect(response).to render_template :update
       end
+
+      it 'returns a forbidden flash message' do
+        patch :update, params: valid_params
+        expect(flash[:danger]).to include('Action not allowed')
+      end
     end
   end
 
   describe 'DELETE #destroy' do
     before { login(user) }
 
-    let!(:answer) { create(:answer, author: user, question: question) }
     let(:valid_params) { { id: answer, format: :js } }
 
     context 'Authenticated user, the author of the answer' do
@@ -113,9 +116,41 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: valid_params }.to_not change(Question, :count)
       end
 
-      it 'returns forbidden status response' do
+      it 'returns a forbidden flash message' do
         delete :destroy, params: valid_params
         expect(flash[:danger]).to include('Action not allowed')
+      end
+    end
+  end
+
+  describe 'PATCH #best' do
+    let!(:another_question) { create(:question, author: another_user) }
+    let(:another_answer) { create(:answer, question: another_question, author: another_user) }
+
+    before { login(user) }
+
+    it 'assigns answer to @answer' do
+      patch :best, params: { id: answer }, format: :js
+      expect(assigns(:answer)).to eq answer
+    end
+
+    context 'Authenticated user author of the question' do
+      it 'selects the best question' do
+        patch :best, params: { id: answer }, format: :js
+        answer.reload
+        expect(answer).to be_best
+      end
+    end
+
+    context 'Not author of the question' do
+      before { patch :best, params: { id: another_answer }, format: :js}
+
+      it "unable to select best answer" do
+        expect(another_answer.best).to be false
+      end
+
+      it "gets a forbidden flash message" do
+        expect(flash[:danger]).to eq 'Action not allowed'
       end
     end
   end

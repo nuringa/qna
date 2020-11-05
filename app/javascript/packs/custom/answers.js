@@ -6,3 +6,7 @@ $(document).on('turbolinks:load', function(){
     $('form#edit-answer-' + answerId).removeClass('hidden')
   })
 })
+
+$(document).on('turbolinks:load',function (){
+  $('.best-bg').append($('.best'));
+});

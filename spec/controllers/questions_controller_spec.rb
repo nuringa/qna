@@ -20,6 +20,9 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
+    let(:answers) { create_list(:answer, 3, question: question) }
+
+    before { answers.last.update!(best: true) }
     before { get :show, params: { id: question } }
 
     it 'assigns the requested question to @question' do
@@ -32,6 +35,15 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns a new answer to @answer' do
       expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
+    it 'assigns question answers to @answers' do
+      expect(assigns(:answers)).to match_array(answers)
+      expect(assigns(:answers).first.best).to be true
+    end
+
+    it 'returns a list of @answers with best answer first' do
+      expect(assigns(:answers).first.best).to be true
     end
   end
 
