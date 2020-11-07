@@ -7,9 +7,6 @@
         table.table.table-hover
           thead
             tr
-            - if @questions.empty?
-              th 'No questions to show.'
-            - else
               th Title
               th Author
           = render @questions

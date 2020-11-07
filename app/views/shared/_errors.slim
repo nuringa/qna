@@ -1,6 +1,6 @@
-- if resource&.errors.present?
-  b = "#{resource.errors.count} error(s) detected."
-
-  ul
+.container
+  - if resource&.errors.present?
     - resource.errors.full_messages.each do |message|
-      li = message
+      div class=("alert alert-danger alert-dismissible")
+        a.close aria-label="close" data-dismiss="alert" href="#"  &times;
+        = message

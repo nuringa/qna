@@ -1,9 +1,10 @@
+.answer-errors
+  = render 'shared/errors', resource: @answer
+
 .container
   .row
     .col-auto
-      = render 'shared/errors', resource: answer
-
-      = form_with model: [@question, answer], local: true do |f|
+      = form_with model: [@question, answer], class: 'new-answer' do |f|
         .form-group
           = f.label :body, class: 'mr-3'
           = f.text_area :body

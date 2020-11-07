@@ -26,11 +26,4 @@ feature 'Visitor can see a question and a list of answers to a question', %q{
       end
     end
   end
-
-  describe 'With no answers to the question visitor' do
-    scenario 'sees a message that there are no answers given yet' do
-      visit question_path(question)
-      expect(page).to have_content 'No answers to show.'
-    end
-  end
 end

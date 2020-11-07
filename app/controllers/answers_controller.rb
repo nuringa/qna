@@ -1,33 +1,39 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show]
+  before_action :authenticate_user!, except: %i[show]
 
-  before_action :load_question, only: %i[new create]
-  before_action :load_answer, only: %i[destroy]
-
-  def new
-    @answer = @question.answers.new
-  end
+  before_action :load_question, only: %i[create]
+  before_action :load_answer, only: %i[update destroy best]
 
   def create
     @answer = @question.answers.new(answer_params)
     @answer.author = current_user
+    @answer.save
+  end
 
-    if @answer.save
-      redirect_to @answer.question, notice: 'Your answer successfully created.'
+  def update
+    if current_user.author_of?(@answer)
+      @answer.update(answer_params)
+      @question = @answer.question
     else
-      redirect_to @answer.question, notice: @answer.errors.full_messages.join(' ')
+      flash[:danger] = 'Action not allowed'
     end
   end
 
-  def index; end
-
   def destroy
-    if current_user.author_of?(@answer)
+    if current_user&.author_of?(@answer)
       @answer.destroy
-      redirect_to question_path(@answer.question), notice: 'Your answer was deleted.'
+      flash[:danger] = 'Your answer was deleted.'
+      render :destroy
     else
-      flash[:notice] = 'Action not allowed'
-      render 'questions/show'
+      flash[:danger] = 'Action not allowed'
+    end
+  end
+
+  def best
+    if current_user&.author_of?(@answer.question)
+      @answer.select_best!
+    else
+      flash[:danger] = 'Action not allowed'
     end
   end
 
