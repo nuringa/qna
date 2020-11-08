@@ -25,6 +25,19 @@ feature 'Authenticated user can answer a question', %q{
       end
     end
 
+    scenario 'answers a question with attached files', js: true do
+      within '.new-answer' do
+        fill_in 'Body', with: 'Test answer to the question'
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Answer'
+      end
+
+      within '.answers' do
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
     scenario 'answers a a question with errors', js: true do
       click_on 'Answer'
 

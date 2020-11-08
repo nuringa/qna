@@ -30,7 +30,7 @@ feature 'Authenticated user can create question', %q{
         expect(page).to have_content 'text text text'
       end
 
-      scenario 'asks a question with an attached file' do
+      scenario 'asks a question with attached files' do
         attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Ask'
 
