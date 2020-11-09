@@ -16,6 +16,5 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
         = f.text_area :body
       = f.submit 'Save', class: 'btn btn-primary'
 
-  - if answer.files.attached?
-    - answer.files.each do |file|
-      p = link_to file.filename.to_s, url_for(file)
+  .answer-files
+    = render 'shared/files', resource: answer
