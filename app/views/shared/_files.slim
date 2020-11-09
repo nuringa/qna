@@ -1,5 +1,10 @@
 - if resource.files.attached?
   ul
     - resource.files.each do |file|
-      li
-        p = link_to file.filename.to_s, url_for(file)
+      div id="attachment_#{file.id}"
+        li
+          = link_to file.filename.to_s, url_for(file)
+          - if current_user&.author_of?(resource)
+            = link_to "Delete File", active_storage_attachment_path(file),
+                         method: :delete, remote: :true, class: 'btn btn-sm btn-light ml-5',
+                         data: { confirm: "Are you sure you wanna this?" }
