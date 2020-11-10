@@ -5,9 +5,17 @@ RSpec.describe ActiveStorage::AttachmentsController, type: :controller do
   let(:another_user) { create(:user) }
   let(:question) { create(:question, author: user) }
 
+  before { question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'test-file.txt') }
+
   before { login(user) }
 
   describe 'DELETE #destroy' do
+    it 'assigns the requested attachment to @attachment' do
+      delete :destroy, params: { id: question.files.first }, format: :js
+
+      expect(assigns(:attachment)).to eq question.files.first
+    end
+
     describe 'question' do
       before do
         question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'test-file.txt')
