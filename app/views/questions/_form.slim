@@ -14,6 +14,6 @@
 
         .form-group
           = f.label :files, class: 'mr-3'
-          = f.file_field :files, multiple: true
+          = f.file_field :files, multiple: true, direct_upload: true
 
         = f.submit 'Ask', class: 'btn btn-primary'

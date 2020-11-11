@@ -20,6 +20,6 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
 
       .form-group
         = f.label :files, class: 'mr-3'
-        = f.file_field :files, multiple: true
+        = f.file_field :files, multiple: true, direct_upload: true
 
       = f.submit 'Save', class: 'btn btn-primary'
