@@ -41,6 +41,16 @@ feature 'User can edit question', %q{
         expect(page).to have_selector 'textarea'
       end
     end
+
+    scenario 'can edit his question and attach files' do
+      within '.question' do
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Update Question'
+
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
+    end
   end
 
   describe 'Authenticated user, not author of the question' do

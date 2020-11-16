@@ -11,7 +11,7 @@ feature 'User can edit his answer', %q{
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question, author: user) }
 
-  describe 'Authenticated user, author of the answer' do
+  describe 'Authenticated user, author of the answer', js: true do
     background do
       sign_in user
       visit question_path(question)
@@ -21,7 +21,7 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario 'edits his answer', js: true do
+    scenario 'edits his answer' do
       within '.answers' do
         fill_in 'Body', with: 'edited answer'
         click_on 'Save'
@@ -32,7 +32,7 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario 'edits his answer with errors', js: true do
+    scenario 'edits his answer with errors' do
       within '.answers' do
         fill_in 'Body', with: ''
         click_on 'Save'
@@ -40,6 +40,16 @@ feature 'User can edit his answer', %q{
         expect(page).to have_content answer.body
         expect(page).to have_content "Body can't be blank"
         expect(page).to have_selector 'textarea'
+      end
+    end
+
+    scenario 'can edit his question and attach files' do
+      within '.answers' do
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Save'
+
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
       end
     end
   end

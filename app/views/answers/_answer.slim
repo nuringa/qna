@@ -3,6 +3,9 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
   .errors
   h5 = answer.body
 
+  .answer-files
+    = render 'shared/files', resource: answer
+
   - if current_user&.author_of?(answer)
     .list-group.list-group-horizontal.mt-3
       = link_to 'Edit', '#', class: 'edit-answer-link list-group-item', data: { answer_id: answer.id }
@@ -14,4 +17,9 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
       .form-group
         = f.label :body, class: 'mr-3'
         = f.text_area :body
+
+      .form-group
+        = f.label :files, class: 'mr-3'
+        = f.file_field :files, multiple: true, direct_upload: true
+
       = f.submit 'Save', class: 'btn btn-primary'

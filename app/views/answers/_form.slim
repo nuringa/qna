@@ -8,4 +8,9 @@
         .form-group
           = f.label :body, class: 'mr-3'
           = f.text_area :body
+
+        .form-group
+          = f.label :files, class: 'mr-3'
+          = f.file_field :files, multiple: true, direct_upload: true
+
         = f.submit 'Answer', class: 'btn btn-primary'

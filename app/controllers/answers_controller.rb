@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[show]
+  before_action :authenticate_user!
 
   before_action :load_question, only: %i[create]
   before_action :load_answer, only: %i[update destroy best]
@@ -20,7 +20,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user&.author_of?(@answer)
+    if current_user.author_of?(@answer)
       @answer.destroy
       flash[:danger] = 'Your answer was deleted.'
       render :destroy
@@ -30,7 +30,7 @@ class AnswersController < ApplicationController
   end
 
   def best
-    if current_user&.author_of?(@answer.question)
+    if current_user.author_of?(@answer.question)
       @answer.select_best!
     else
       flash[:danger] = 'Action not allowed'
@@ -40,7 +40,7 @@ class AnswersController < ApplicationController
   private
 
   def load_answer
-    @answer = Answer.find(params[:id])
+    @answer = Answer.with_attached_files.find(params[:id])
   end
 
   def load_question
@@ -48,6 +48,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end
