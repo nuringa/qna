@@ -1,4 +1,4 @@
-class ActiveStorage::AttachmentsController < ApplicationController
+class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_attachment
 
