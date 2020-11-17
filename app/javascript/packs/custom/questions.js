@@ -1,7 +1,8 @@
 $(document).on('turbolinks:load', function(){
-  $('.edit-question-link').on('click', function(e) {
+  $('.question').on('click', '.edit-question-link', function(e) {
     e.preventDefault()
     $(this).hide()
-    $('#edit-question-form').removeClass('hidden')
+    const questionId = $(this).data('questionId');
+    $('form#edit-question-' + questionId).removeClass('hidden')
   })
 })

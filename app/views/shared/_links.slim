@@ -1,0 +1,5 @@
+- if resource.links.any?
+  h3 Links:
+  ul
+    - resource.links.each do |link|
+      li= link_to link.name, link.url

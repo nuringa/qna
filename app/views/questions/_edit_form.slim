@@ -1,4 +1,4 @@
-= form_with model: @question, class: 'hidden', html: { id: "edit-question-form" } do |f|
+= form_with model: @question,  class: 'hidden', html: { id: "edit-question-#{@question.id}" }  do |f|
   .form-group
     = f.label :title, class: 'mr-3'
     = f.text_field :title
@@ -7,8 +7,20 @@
     = f.label :body, class: 'mr-3'
     = f.text_area :body
 
-    .form-group
-      = f.label :files, class: 'mr-3'
-      = f.file_field :files, multiple: true, direct_upload: true
+  .form-group
+    = f.label :files, class: 'mr-3'
+    = f.file_field :files, multiple: true, direct_upload: true
+
+  .question-links
+    h3 Links
+    p
+
+  .form-group
+    = f.fields_for :links do |l|
+      = render 'shared/link_fields', f: l
+
+    .links
+      = link_to_add_association 'Add Link', f, :links,
+              partial: 'shared/link_fields'
 
   = f.submit

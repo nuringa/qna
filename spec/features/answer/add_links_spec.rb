@@ -8,23 +8,47 @@ feature 'User can add links to answer', %q{
 
   given(:user) {create(:user)}
   given!(:question) {create(:question)}
-  given(:gist_url) {'https://gist.github.com/vkurennov/743f9367caa1039874af5a2244e1b44c'}
+  given(:google_url) {'https://www.google.com/'}
+  given(:yandex_url) {'https://www.yandex.ru/'}
 
-  scenario 'User adds link when give an answer', js: true do
+  scenario 'User adds link when he answers a question', js: true do
     sign_in(user)
 
     visit question_path(question)
 
     fill_in 'Body', with: 'My answer'
 
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+    fill_in 'Link name', with: 'Link to google'
+    fill_in 'Url', with: google_url
 
     click_on 'Answer'
 
     within '.answers' do
-      expect(page).to have_link 'My gist', href: gist_url
+      expect(page).to have_link 'Link to google', href: google_url
     end
   end
 
+  scenario 'User adds multiple links when he answers a question', js: true do
+    sign_in(user)
+
+    visit question_path(question)
+
+    fill_in 'Body', with: 'My answer'
+
+    fill_in 'Link name', with: 'Link to google'
+    fill_in 'Url', with: google_url
+
+    click_on 'Add Link'
+    within all('.nested-fields').last do
+      fill_in 'Link name', with: 'Link to yandex'
+      fill_in 'Url', with: yandex_url
+    end
+
+    click_on 'Answer'
+
+    within '.answers' do
+      expect(page).to have_link 'Link to google', href: google_url
+      expect(page).to have_link 'Link to yandex', href: yandex_url
+    end
+  end
 end

@@ -13,15 +13,15 @@
           = f.label :files, class: 'mr-3'
           = f.file_field :files, multiple: true, direct_upload: true
 
-        p Links
-        p
-        .form-group
-          = f.fields_for :links do |l|
-            p
-              = l.label :name, 'Link name'
-              = l.text_field :name
-            p
-              = l.label :url
-              = l.text_field :url
+        .answer-links
+          h3 Links
+          p
+
+          .form-group
+            = f.fields_for :links do |l|
+              = render 'shared/link_fields', f: l
+            .links
+              = link_to_add_association 'Add Link', f, :links,
+                      partial: 'shared/link_fields'
 
         = f.submit 'Answer', class: 'btn btn-primary'
