@@ -1,8 +1,13 @@
 $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
 
-<% if @answer.persisted? %>
-  $('.answers').append('<%= j render @answer, answers: @question.answers %>');
-  $('.new-answer #answer_body').val('')
-  $('.answer-links .link-name').val('')
-  $('.answer-links .link-url').val('')
+<% if @answer.links.any?(&:gist?) %>
+  window.location.reload();
+<% else %>
+  <% if @answer.persisted? %>
+    $('#new-answer-errors').html('<%= j render 'shared/errors', resource: @answer %>');
+    $('.answers').append('<%= j render @answer, answers: @question.answers %>');
+    $('.new-answer #answer_body').val('')
+    $('.answer-links .link-name').val('')
+    $('.answer-links .link-url').val('')
+  <% end %>
 <% end %>

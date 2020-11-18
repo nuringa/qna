@@ -6,4 +6,8 @@ class Link < ApplicationRecord
             presence: true,
             length: { maximum: 245 },
             format: { with: URI.regexp(%w[http https]), message: 'format is wrong' }
+
+  def gist?
+    URI.parse(url).host.include?('gist')
+  end
 end

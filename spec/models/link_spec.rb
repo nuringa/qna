@@ -16,4 +16,17 @@ RSpec.describe Link, type: :model do
       .for(:url)
       .with_message('format is wrong')
   end
+
+  describe '#gist?' do
+    let(:link_to_gist) { create(:link, url: 'https://gist.github.com/nuringa/6afe26f1d6c0236787a6ee9d002378af') }
+    let(:link) { create(:link) }
+
+    describe 'gist instead link' do
+      it { expect(link_to_gist).to be_gist }
+    end
+
+    describe 'link' do
+      it { expect(link).to_not be_gist }
+    end
+  end
 end
