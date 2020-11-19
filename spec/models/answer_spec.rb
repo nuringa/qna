@@ -23,4 +23,31 @@ RSpec.describe Answer, type: :model do
   it 'can have many attached files' do
     expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
+
+  describe '#select_best!' do
+    let(:question) { create(:question) }
+    let(:answers) { create_list(:answer, 3, :for_list, question: question) }
+    let(:another_answer) { create(:answer, question: question, body: 'Best answer') }
+
+    it 'should change best attribute of the answer to true' do
+      answers << another_answer
+      another_answer.select_best!
+
+      expect(question.answers.detect { |answer| answer.best }.body).to eq('Best answer')
+    end
+
+    it "should set just one best answer for the question" do
+      answers.first.update!(best: true)
+      another_answer.select_best!
+
+      expect(question.answers.detect { |answer| answer.best }.body).to eq('Best answer')
+    end
+
+    it "gives reward to the best answer's author" do
+      reward = create(:reward, question: question)
+      another_answer.select_best!
+
+      expect(another_answer.author.rewards.first).to eq(reward)
+    end
+  end
 end

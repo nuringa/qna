@@ -16,6 +16,14 @@
           = f.label :files, class: 'mr-3'
           = f.file_field :files, multiple: true, direct_upload: true
 
+        .form-group
+          = f.fields_for :reward do |reward|
+            = reward.label :title, 'Reward title'
+            = reward.text_field :title, class: 'form-control'
+            p
+            = reward.label :file, 'Reward Image'
+            = reward.file_field :file, class: 'form-control-file'
+
         .question-links
           h3 Links
           p
