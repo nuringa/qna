@@ -3,6 +3,6 @@
   ul
     - resource.links.each do |link|
       - if link.gist?
-        div class="gist" data-src="#{link.url}.json"
+        code gist="#{link.url}.json"
       - else
         li= link_to link.name, link.url

@@ -1,36 +1,43 @@
-// from 'Embeded Gists' article by Joseph Ndungu,
-// https://josephndungu.com/tutorials/using-github-embedded-gists-with-turbolinks
+// based on Mark Selby's async-gists.js: https://gist.github.com/markselby/7209751
 
-var loadGist, loadGists;
-
-$(function() {
-  loadGists();
-  return $(document).on('turbolinks:load', loadGists);
-});
-
-loadGists = function() {
-  return $('.gist').each(function() {
-    return loadGist($(this));
+function loadGists() {
+  var els = $('code[gist]'), gists = {}, code = [], stylesheets = [];
+  // Get elements referencing a gist and build a gists hash referencing the elements that use it
+  els.each(function(idx, rawEl) {
+    var el = $(rawEl), gist = el.attr('gist');
+    rawEl.gist = gist;
+    rawEl.file = el.attr('file');
+    gists[gist] = gists[gist] || { targets: [] };
+    gists[gist].targets.push(el);
   });
-};
-
-loadGist = function($gist) {
-  var callbackName, script;
-  callbackName = 'c' + Math.random().toString(36).substring(7);
-  window[callbackName] = function(gistData) {
-    var html;
-    delete window[callbackName];
-    html = '<link rel="stylesheet" href="' + encodeURI(gistData.stylesheet) + '"></link>';
-    html += gistData.div;
-    $gist.html(html);
-    return script.parentNode.removeChild(script);
-  };
-  script = document.createElement('script');
-  script.setAttribute('src', [
-    $gist.data('src'), $.param({
-      callback: callbackName,
-      file: $gist.data('file') || ''
-    })
-  ].join('?'));
-  return document.body.appendChild(script);
-};
+  // Load the gists
+  $.each(gists, function(name, data) {
+    $.getJSON(name + '?callback=?', function(data) {
+      var gist = gists[name];
+      gist.data = data;
+      // Only insert the stylesheets once
+      if(stylesheets.indexOf(gist.data.stylesheet) < 0) {
+        stylesheets.push(gist.data.stylesheet);
+        $('head').append('<link rel="stylesheet" href="https://gist.github.com' + gist.data.stylesheet + '" />');
+      }
+      gist.files = $(gist.data.div).find('.gist-file');
+      gist.outer = $(gist.data.div).first().html('');
+      // Iterate elements refering to this gist
+      $(gist.targets).each(function(idx, target) {
+        var file = target.get(0).file;
+        if(file) {
+          var o = gist.outer.clone();
+          var c = '<div class="gist-file">' + $(gist.files.get(gist.data.files.indexOf(file))).html() + '</div>';
+          o.html(c);
+          target.replaceWith(o);
+        }
+        else {
+          target.replaceWith(gist.data.div);
+        }
+      });
+    });
+  });
+}
+// Load them on document ready
+$(loadGists)
+$(document).on('embedGist', loadGists)
