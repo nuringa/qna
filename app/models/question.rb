@@ -9,4 +9,8 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :reward, reject_if: :all_blank
 
   validates :title, :body, presence: true
+
+  def reward_for_best_answer
+    answers.detect(&:best) && reward
+  end
 end

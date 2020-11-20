@@ -3,7 +3,7 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
   .errors
   h5 = answer.body
 
-  - if answer.best? && ( reward = answer.question.reward )
+  - if ( reward = @question.reward_for_best_answer )
     #reward
       h4 Reward
       .mr-3 = reward.title
