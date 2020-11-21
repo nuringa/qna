@@ -49,6 +49,14 @@ RSpec.describe QuestionsController, type: :controller do
     it 'returns a list of @answers with best answer first' do
       expect(assigns(:answers).first.best).to be true
     end
+
+    context "N+1", :n_plus_one do
+      populate { |n| create_list(:answer, n, question: question) }
+
+      specify do
+        expect { get :show, params: {id: question.id} }.to perform_constant_number_of_queries
+      end
+    end
   end
 
   describe 'GET #new' do
