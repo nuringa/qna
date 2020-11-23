@@ -17,6 +17,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'slim-rails'
 gem 'devise'
 gem 'aws-sdk-s3'
+gem 'cocoon'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -44,6 +45,7 @@ group :test do
   gem 'shoulda-matchers', '~> 4.0'
   gem 'rails-controller-testing'
   gem 'launchy'
+  gem "n_plus_one_control"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

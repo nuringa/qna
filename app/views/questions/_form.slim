@@ -16,4 +16,23 @@
           = f.label :files, class: 'mr-3'
           = f.file_field :files, multiple: true, direct_upload: true
 
-        = f.submit 'Ask', class: 'btn btn-primary'
+        .form-group
+          = f.fields_for :reward do |reward|
+            = reward.label :title, 'Reward title'
+            = reward.text_field :title, class: 'form-control'
+            p
+            = reward.label :file, 'Reward Image'
+            = reward.file_field :file, class: 'form-control-file'
+
+        .question-links
+          h3 Links
+          p
+
+          .form-group
+            = f.fields_for :links do |l|
+              = render 'shared/link_fields', f: l
+            .links
+              = link_to_add_association 'Add Link', f, :links,
+                      partial: 'shared/link_fields'
+
+        = f.submit 'Ask', class: 'btn btn-primary mt-3'

@@ -37,6 +37,10 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:answer)).to be_a_new(Answer)
     end
 
+    it 'assigns new link for answer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
+
     it 'assigns question answers to @answers' do
       expect(assigns(:answers)).to match_array(answers)
       expect(assigns(:answers).first.best).to be true
@@ -44,6 +48,14 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'returns a list of @answers with best answer first' do
       expect(assigns(:answers).first.best).to be true
+    end
+
+    context "N+1", :n_plus_one do
+      populate { |n| create_list(:answer, n, question: question) }
+
+      specify do
+        expect { get :show, params: {id: question.id} }.to perform_constant_number_of_queries
+      end
     end
   end
 
@@ -54,6 +66,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns a new Question to @question' do
       expect(assigns(:question)).to be_a_new(Question)
+    end
+
+    it 'assigns a new link to @question' do
+      expect(assigns(:question).links.first).to be_a_new(Link)
     end
 
     it 'renders new view' do

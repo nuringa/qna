@@ -1,13 +1,18 @@
-.question-errors
+div.mt-3 id="question-#{question.id}"
+  .question-errors
 
-h1.title.text-primary.text-center#question-title = @question.title
-h3#question-body = @question.body
+  h1.title.text-primary.text-center#question-title = @question.title
+  h3#question-body = @question.body
 
-.question-files
-  = render 'shared/files', resource: question
+  .question-files
+    = render 'shared/files', resource: @question
 
-- if current_user&.author_of?(@question)
-  p = link_to 'Edit question', '#', class: 'edit-question-link'
-  p = link_to 'Delete question', question_path(@question), method: :delete
+  .question-links
+    = render 'shared/links', resource: @question
 
-= render 'edit_form'
+  - if current_user&.author_of?(@question)
+    .list-group.list-group-horizontal.mt-3
+      = link_to 'Edit question', '#', class: 'edit-question-link list-group-item', data: { question_id: @question.id }
+      = link_to 'Delete question', question_path(@question), method: :delete, class: 'list-group-item'
+
+  = render 'edit_form'

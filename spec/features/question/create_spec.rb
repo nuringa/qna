@@ -37,6 +37,24 @@ feature 'Authenticated user can create question', %q{
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
       end
+
+      scenario 'asks a question with a reward for best answer assigned' do
+        fill_in 'Reward title', with: 'Reward'
+        attach_file 'Reward Image', "#{Rails.root}/spec/support/files/image.png"
+
+        click_on 'Ask'
+
+        expect(page).to have_content 'Your question successfully created.'
+      end
+
+      scenario 'asks a question with an reward with mistakes' do
+        fill_in 'Reward title', with: 'Reward'
+
+        click_on 'Ask'
+
+        expect(page).to_not have_content 'Your question was successfully created.'
+        expect(page).to have_content "Reward file can't be blank"
+      end
     end
 
     context 'with errors' do

@@ -4,3 +4,5 @@ $('#answer-<%= @answer.id %> .errors').html('<%= render 'shared/errors', resourc
   $('#answer-<%= @answer.id %>').replaceWith('<%= j render @answer %>');
   $('.errors').html('');
 <% end %>
+
+$(document).trigger('embedGist')

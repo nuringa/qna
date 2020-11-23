@@ -3,8 +3,17 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
   .errors
   h5 = answer.body
 
+  - if answer.best? && ( reward =  answer.question.reward_for_best_answer )
+    #reward
+      h4 Reward
+      .mr-3 = reward.title
+      = image_tag(url_for(reward.file), size: 100)
+
   .answer-files
     = render 'shared/files', resource: answer
+
+  .answer-links
+    = render 'shared/links', resource: answer
 
   - if current_user&.author_of?(answer)
     .list-group.list-group-horizontal.mt-3
@@ -13,13 +22,4 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
       -if current_user&.author_of?(answer.question) && !answer.best?
         = link_to 'Choose best', best_answer_path(answer), remote: true, method: :patch, class: 'list-group-item'
 
-    = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-      .form-group
-        = f.label :body, class: 'mr-3'
-        = f.text_area :body
-
-      .form-group
-        = f.label :files, class: 'mr-3'
-        = f.file_field :files, multiple: true, direct_upload: true
-
-      = f.submit 'Save', class: 'btn btn-primary'
+    = render 'answers/edit_form', answer: answer

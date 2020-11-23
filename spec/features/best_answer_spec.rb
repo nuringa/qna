@@ -11,6 +11,7 @@ feature 'Select best answer', %q{
   given(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, question: question, author: user) }
   given!(:another_answer) { create(:answer, body: 'Another answer', question: question, author: user) }
+  given!(:reward) { create(:reward, question: question) }
 
   describe 'Authenticated user', js: true do
     context 'Author of the question' do
@@ -41,6 +42,17 @@ feature 'Select best answer', %q{
         within '.best-bg' do
           expect(page).to_not have_content answer.body
           expect(page).to have_content another_answer.body
+        end
+      end
+
+      scenario 'can select the best answer and see a reward icon assigned to it' do
+        within "#answer-#{answer.id}" do
+          click_on 'Choose best'
+        end
+
+        expect(page).to have_css("img[src*='image.png']", count: 1)
+        within '.best-bg' do
+          expect(page).to have_content answer.body
         end
       end
     end

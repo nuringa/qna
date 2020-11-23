@@ -1,0 +1,16 @@
+-if @rewards.any?
+  .container
+    .row.mt-5
+      .col-auto
+        table.table.table-hover
+          thead
+            tr
+              th Question
+              th Reward title
+              th Image
+
+          -@rewards.each do |reward|
+            tr
+              td.align-middle = reward.question.title
+              td.align-middle = reward.title
+              td = image_tag(url_for(reward.file), size: 100)
