@@ -3,6 +3,10 @@ div.mt-3 id="question-#{question.id}"
 
   h1.title.text-primary.text-center#question-title = @question.title
   h3#question-body = @question.body
+  div class="question-#{@question.id}"
+    .vote
+      - if user_signed_in?
+        = render partial: 'votes/vote', locals: {resource: @question}
 
   .question-files
     = render 'shared/files', resource: @question

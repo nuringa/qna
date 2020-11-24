@@ -2,6 +2,10 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
 
   .errors
   h5 = answer.body
+  div class="answer-#{answer.id}"
+    .vote
+      - if user_signed_in?
+        = render partial: 'votes/vote', locals: {resource: answer}
 
   - if answer.best? && ( reward =  answer.question.reward_for_best_answer )
     #reward

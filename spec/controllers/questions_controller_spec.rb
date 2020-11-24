@@ -5,6 +5,10 @@ RSpec.describe QuestionsController, type: :controller do
   let(:another_user) { create(:user) }
   let(:question) { create(:question) }
 
+  it_behaves_like 'voted' do
+    let(:model) { create :question, author: user }
+  end
+
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
 

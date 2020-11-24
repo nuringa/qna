@@ -4,6 +4,8 @@ class AnswersController < ApplicationController
   before_action :load_question, only: %i[create]
   before_action :load_answer, only: %i[update destroy best]
 
+  include Voted
+
   def create
     @answer = @question.answers.new(answer_params)
     @answer.author = current_user
