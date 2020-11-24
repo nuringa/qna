@@ -21,3 +21,4 @@ require("@nathanvda/cocoon")
 import './custom/answers'
 import './custom/questions'
 import './custom/gist'
+import './custom/vote'
