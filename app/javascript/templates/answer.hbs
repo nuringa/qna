@@ -1,0 +1,13 @@
+<div class="mt-3" id="answer-{{answer.id}}">
+  <h5>{{answer.body}}</h5>
+
+  <div class="answer-{{answer.id}}">
+    <div class="vote">
+      <a data-type="json" class="mr-2" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/vote_up">Vote up</a>
+      |<a data-type="json" class="ml-2 mr-2" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/vote_down">Vote down</a>
+      |<a data-type="json" class="ml-2" data-remote="true" rel="nofollow" data-method="patch" --}} href="/answers/{{answer.id}}/cancel_vote">Cancel vote</a>
+
+     <div class="rating">{{rating}}</div>
+    </div>
+  </div>
+</div>
