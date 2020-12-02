@@ -9,10 +9,11 @@ $(document).on('turbolinks:load', function () {
 
       received(data) {
         if (gon.user_id === data.answer.author_id) return
-
         const template = require('../templates/answer.hbs')
 
-        data.is_guest = gon.user === null
+        data.is_guest = gon.user_id === null
+        data.is_question_author = data.question_author_id === gon.user_id
+
         $('.answers').append(template(data))
 
         voting()

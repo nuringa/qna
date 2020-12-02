@@ -4,6 +4,6 @@ class ApplicationController < ActionController::Base
   private
   def set_gon_params
     gon.params = params.permit(:id)
-    gon.user = current_user&.id
+    gon.user_id = current_user&.id
   end
 end

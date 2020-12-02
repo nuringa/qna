@@ -38,5 +38,11 @@
         </ul>
       </div>
     {{/if}}
+
+    {{#if is_question_author}}
+      <div class="list-group list-group-horizontal mt-3">
+        <a class="list-group-item" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/best">Choose best</a>
+      </div>
+    {{/if}}
   {{/unless}}
 </div>

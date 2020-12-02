@@ -63,7 +63,8 @@ class AnswersController < ApplicationController
                                  answer: @answer,
                                  rating: @answer.rating,
                                  files: files_for_broadcast,
-                                 links: @answer.links
+                                 links: @answer.links,
+                                 question_author_id: @question.author_id
   end
   
   def files_for_broadcast
