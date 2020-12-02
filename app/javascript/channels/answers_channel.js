@@ -2,18 +2,20 @@ import consumer from "./consumer"
 
 $(document).on('turbolinks:load', function () {
   if (window.location.href.match(/questions\/\d+/)) {
-    var subscription = consumer.subscriptions.create("AnswersChannel", {
+    let subscription = consumer.subscriptions.create("AnswersChannel", {
       connected() {
         subscription.perform('follow', gon.params)
       },
 
       received(data) {
-        if (!(gon.user === data.author_id)) {
-          let template = require('../templates/answer.hbs')(data)
-          $('.answers').append(template)
+        if (gon.user_id === data.answer.author_id) return
 
-          voting()
-        }
+        const template = require('../templates/answer.hbs')
+
+        data.is_guest = gon.user === null
+        $('.answers').append(template(data))
+
+        voting()
       }
     })
   }

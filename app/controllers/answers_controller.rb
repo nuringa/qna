@@ -58,6 +58,15 @@ class AnswersController < ApplicationController
 
   def publish_answer
     return if @answer.errors.any?
-    ActionCable.server.broadcast "question-#{@question.id}", answer: @answer, rating: @answer.rating
+
+    ActionCable.server.broadcast "question-#{@question.id}",
+                                 answer: @answer,
+                                 rating: @answer.rating,
+                                 files: files_for_broadcast,
+                                 links: @answer.links
+  end
+  
+  def files_for_broadcast
+    @answer.files&.map { |f| { filename: f.filename.to_s, url: url_for(f), id: f.id } }
   end
 end
