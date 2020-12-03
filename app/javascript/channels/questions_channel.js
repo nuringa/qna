@@ -6,6 +6,10 @@ consumer.subscriptions.create("QuestionsChannel", {
   },
 
   received(data) {
-    $('.questions').append(data)
+    if (gon.user_id === data.question.author_id) return
+
+    const template = require('../templates/question.hbs')
+
+    $('.questions').append(template(data))
   }
 });

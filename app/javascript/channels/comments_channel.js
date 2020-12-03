@@ -8,7 +8,7 @@ consumer.subscriptions.create("CommentsChannel", {
   received(data) {
     if (gon.user_id === data.author_id) return
 
-    let commentHtml = require('templates/comments.hbs')(data)
+    let commentHtml = require('templates/comment.hbs')(data)
     $('#' + data.commentable_type.toLowerCase() + '-' + data.commentable_id + ' .comments').append(commentHtml);
   }
 });
