@@ -63,6 +63,8 @@ class QuestionsController < ApplicationController
   def publish_question
     return if @question.errors.any?
 
-    ActionCable.server.broadcast('questions', question: @question, author_email: @question.author.email)
+    ActionCable.server.broadcast 'questions',
+                                 question: @question,
+                                 author_email: @question.author.email
   end
 end

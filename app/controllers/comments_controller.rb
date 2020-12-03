@@ -28,9 +28,6 @@ class CommentsController < ActionController::Base
   def publish_comment
     return if @comment.errors.any?
 
-    ActionCable.server.broadcast(
-      "comment-question-#{@question_id}",
-      @comment
-    )
+    ActionCable.server.broadcast "question-#{@question_id}", @comment
   end
 end
