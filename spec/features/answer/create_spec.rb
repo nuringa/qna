@@ -53,4 +53,72 @@ feature 'Authenticated user can answer a question', %q{
       expect(page).to have_content 'You need to sign in or sign up before continuing.'
     end
   end
+
+  context 'multiple sessions', :cable do
+    given(:another_user) { create(:user) }
+    given(:another_question) { create(:question) }
+
+    background do
+      Capybara.using_session('author') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('another_user') do
+        sign_in(another_user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+    end
+
+    scenario 'other users and guests see new answer published in real-time', js: true do
+      Capybara.using_session('author') do
+        fill_in 'Body', with: 'Test answer'
+        attach_file 'Files', "#{Rails.root}/spec/rails_helper.rb"
+        fill_in 'Link name', with: 'Link to google'
+        fill_in 'Url', with: 'https://www.google.com'
+
+        click_on 'Answer'
+
+        expect(page).to have_content 'Test answer'
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'Link to google', href: 'https://www.google.com'
+      end
+
+      Capybara.using_session('another_user') do
+        expect(page).to have_content 'Test answer'
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'Link to google', href: 'https://www.google.com'
+        expect(page).to have_link 'Vote up'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'Test answer'
+        expect(page).to have_no_link 'rails_helper.rb'
+        expect(page).to have_no_link 'Link to google', href: 'https://www.google.com'
+        expect(page).to have_no_link 'Vote up'
+      end
+    end
+
+    scenario 'answer appears only on its question page', js: true do
+      Capybara.using_session('another_user') do
+        visit question_path(another_question)
+      end
+
+      Capybara.using_session('author') do
+        fill_in 'Body', with: 'Test answer'
+
+        click_on 'Answer'
+
+        expect(page).to have_content 'Test answer'
+      end
+
+      Capybara.using_session('another_user') do
+        expect(page).to have_no_content 'Test question'
+      end
+    end
+  end
 end
