@@ -1,0 +1,8 @@
+<% type = @comment.commentable_type.underscore %>
+
+$('.comment-errors').html('<%= render 'shared/errors', resource: @comment %>');
+
+<% if @comment.persisted? %>
+  $('.<%= type %>-comments').append("<%= j render @comment %>");
+  $('#comment_body').val('');
+<% end %>

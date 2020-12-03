@@ -19,6 +19,9 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
   .answer-links
     = render 'shared/links', resource: answer
 
+  .answer-comments.mt-2
+    = render 'comments/comments', commentable: answer
+
   .list-group.list-group-horizontal.mt-3
     - if current_user&.author_of?(answer)
       = link_to 'Edit', '#', class: 'edit-answer-link list-group-item', data: { answer_id: answer.id }

@@ -18,10 +18,13 @@ feature "User can vote for other's answers", %(
 
     scenario "votes for other user's answer" do
       visit question_path(question)
+
       within '.answers' do
         click_on 'Vote up'
       end
-      expect(page).to have_content '1'
+
+      answers = find(:css, '.answers')
+      expect(answers).to have_content '1'
     end
 
     scenario 'changes his vote' do
@@ -31,7 +34,8 @@ feature "User can vote for other's answers", %(
         click_on 'Vote down'
       end
 
-      expect(page).to have_content '-1'
+      answers = find(:css, '.answers')
+      expect(answers).to have_content '-1'
     end
 
     scenario "can change rating the same way only once" do
@@ -43,7 +47,7 @@ feature "User can vote for other's answers", %(
 
       answers = find(:css, '.answers')
       expect(answers).not_to have_content '2'
-      expect(page).to have_content '1'
+      expect(answers).to have_content '1'
     end
   end
 
@@ -54,6 +58,7 @@ feature "User can vote for other's answers", %(
 
     scenario "can't vote for his own answer" do
       visit question_path(question)
+
       answers = find(:css, '.answers')
       expect(answers).not_to have_content 'Vote up'
       expect(answers).not_to have_content 'Vote down'

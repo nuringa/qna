@@ -1,0 +1,12 @@
+.container
+  .row
+    .col-auto
+      = form_with model: [commentable, comment], remote: true do |f|
+        .comment-errors
+          = render 'shared/errors', resource: comment
+
+        .form-group
+          = f.label :body, 'Comment'
+          = f.text_area :body, class: 'form-control'
+
+        = f.submit 'Add comment', class: 'btn btn-sm btn-secondary'
