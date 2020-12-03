@@ -4,6 +4,6 @@
     - commentable.comments.each do |comment|
       = render 'comments/comment', comment: comment
 
-  - if user_signed_in?
-    .new-comment
-      = render 'comments/form', commentable: commentable, comment: commentable.comments.new
+- if user_signed_in?
+  .new-comment
+    = render 'comments/form', commentable: commentable, comment: commentable.comments.new

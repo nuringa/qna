@@ -14,8 +14,8 @@ div.mt-3 id="question-#{question.id}"
   .question-links
     = render 'shared/links', resource: @question
 
-    .question-comments.mt-2
-      = render 'comments/comments', commentable: question
+  .question-comments.mt-2
+    = render 'comments/comments', commentable: question
 
   - if current_user&.author_of?(@question)
     .list-group.list-group-horizontal.mt-3

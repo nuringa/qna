@@ -2,6 +2,8 @@ class CommentsController < ActionController::Base
   before_action :authenticate_user!
   before_action :find_resource, only: :create
 
+  after_action :publish_comment, only: :create
+
   def create
     @comment = Comment.new(comment_params)
     @comment.author = current_user
@@ -27,7 +29,7 @@ class CommentsController < ActionController::Base
     return if @comment.errors.any?
 
     ActionCable.server.broadcast(
-      "comment_on_question_#{@question_id}",
+      "comment-question-#{@question_id}",
       @comment
     )
   end

@@ -44,4 +44,32 @@ feature 'Add comment to answer', %q{
       end
     end
   end
+
+  context 'Multiple sessions' do
+    scenario "saved comment appears on another user's page in real time", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        within '.answer-comments' do
+          fill_in 'Comment', with: 'Answer Comment'
+          click_on 'Add comment'
+          expect(page).to have_content 'Answer Comment'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        within '.answer-comments' do
+          expect(page).to have_content 'Answer Comment'
+        end
+      end
+    end
+  end
+
 end
