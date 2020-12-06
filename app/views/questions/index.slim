@@ -3,15 +3,8 @@
 
   .container
     .row.mt-5
-      .col-auto
-        table.table.table-hover
-          thead
-            tr
-              th Title
-              th Author
-          - @questions.each do |question|
-            tr
-              td = link_to question.title, question_path(question)
-              td = question.author.email
+      .questions
+        - @questions.each do |question|
+          = render 'questions/question_list', question: question
 
-        = link_to 'Ask  question', new_question_path, class: 'btn btn-primary'
+    = link_to 'Ask  question', new_question_path, class: 'btn btn-primary'

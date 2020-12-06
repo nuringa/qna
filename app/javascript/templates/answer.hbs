@@ -1,0 +1,48 @@
+<div class="mt-3" id="answer-{{answer.id}}">
+  <h5>{{answer.body}}</h5>
+
+  {{#unless is_guest}}
+    <div class="answer-{{answer.id}}">
+      <div class="vote">
+        <a data-type="json" class="mr-2" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/vote_up">Vote up</a>
+        |<a data-type="json" class="ml-2 mr-2" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/vote_down">Vote down</a>
+        |<a data-type="json" class="ml-2" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/cancel_vote">Cancel vote</a>
+
+        <div class="rating">{{rating}}</div>
+      </div>
+    </div>
+
+    {{#if files.length}}
+      <div class="answer-files">
+        <ul>
+          {{#each files}}
+            <div id="attachment_{{this.id}}">
+              <li>
+                <a href="{{this.url}}">{{this.filename}}</a>
+              </li>
+            </div>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+
+    {{#if links.length}}
+      <div class="answer-links">
+        <h3>Links:</h3>
+        <ul>
+          {{#each links}}
+            <li>
+              <a href="{{this.url}}">{{this.name}}</a>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+
+    {{#if is_question_author}}
+      <div class="list-group list-group-horizontal mt-3">
+        <a class="list-group-item" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/best">Choose best</a>
+      </div>
+    {{/if}}
+  {{/unless}}
+</div>

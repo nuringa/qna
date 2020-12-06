@@ -19,7 +19,9 @@ feature "User can vote for other's questions", %(
       visit question_path(question)
       click_on 'Vote up'
 
-      expect(page).to have_content '1'
+      within '.question' do
+        expect(page).to have_content '1'
+      end
     end
 
     scenario 'changes his vote' do
@@ -27,7 +29,9 @@ feature "User can vote for other's questions", %(
       click_on 'Vote up'
       click_on 'Vote down'
 
-      expect(page).to have_content '-1'
+      within '.question' do
+        expect(page).to have_content '-1'
+      end
     end
 
     scenario "can change rating the same way only once" do
@@ -35,8 +39,10 @@ feature "User can vote for other's questions", %(
       click_on 'Vote up'
       click_on 'Vote up'
 
-      expect(page).not_to have_content '2'
-      expect(page).to have_content '1'
+      within '.question' do
+        expect(page).not_to have_content '2'
+        expect(page).to have_content '1'
+      end
     end
   end
 

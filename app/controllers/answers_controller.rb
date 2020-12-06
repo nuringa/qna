@@ -4,6 +4,8 @@ class AnswersController < ApplicationController
   before_action :load_question, only: %i[create]
   before_action :load_answer, only: %i[update destroy best]
 
+  after_action :publish_answer, only: %i[create]
+
   include Voted
 
   def create
@@ -52,5 +54,20 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, files: [],
                                    links_attributes: [:id, :name, :url, :_destroy])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast "question-#{@question.id}",
+                                 answer: @answer,
+                                 rating: @answer.rating,
+                                 files: files_for_broadcast,
+                                 links: @answer.links,
+                                 question_author_id: @question.author_id
+  end
+  
+  def files_for_broadcast
+    @answer.files&.map { |f| { filename: f.filename.to_s, url: url_for(f), id: f.id } }
   end
 end

@@ -5,6 +5,7 @@ RSpec.describe Question, type: :model do
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:links).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
+  it { should have_many(:comments).dependent(:destroy) }
 
   it { should accept_nested_attributes_for(:links).allow_destroy(true) }
 

@@ -19,11 +19,14 @@ div.mt-3 id="answer-#{answer.id}" class=("best-bg" if answer.best?)
   .answer-links
     = render 'shared/links', resource: answer
 
-  - if current_user&.author_of?(answer)
-    .list-group.list-group-horizontal.mt-3
+  .answer-comments.mt-2
+    = render 'comments/comments', commentable: answer
+
+  .list-group.list-group-horizontal.mt-3
+    - if current_user&.author_of?(answer)
       = link_to 'Edit', '#', class: 'edit-answer-link list-group-item', data: { answer_id: answer.id }
       = link_to 'Delete', answer_path(answer), class: 'delete-answer-link list-group-item', remote: true, method: :delete
-      -if current_user&.author_of?(answer.question) && !answer.best?
-        = link_to 'Choose best', best_answer_path(answer), remote: true, method: :patch, class: 'list-group-item'
+    - if current_user&.author_of?(answer.question) && !answer.best?
+      = link_to 'Choose best', best_answer_path(answer), remote: true, method: :patch, class: 'list-group-item'
 
     = render 'answers/edit_form', answer: answer
